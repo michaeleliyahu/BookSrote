@@ -59,7 +59,7 @@ cd BookstoreApi
 dotnet run --project BookstoreApi
 ```
 
-4. When running the project, the Swagger UI will automatically open in your browser at:
+4. Open Swagger UI in your browser at:
 
 ```bash
 http://localhost:5095/swagger/index.html
