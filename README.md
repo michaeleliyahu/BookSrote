@@ -42,7 +42,7 @@ It also provides the ability to generate an HTML report listing all books.
 
 ```bash
 git clone https://github.com/michaeleliyahu/BookSrote.git
-cd BookstoreApi
+cd BookStore
 ```
 
 2. Configure the path to the XML data file in appsettings.json (default is Data/bookstore.xml):
