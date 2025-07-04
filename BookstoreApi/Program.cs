@@ -4,48 +4,50 @@ using BookstoreApi.Repositories.Implementations;
 using BookstoreApi.Repositories.Interfaces;
 using BookstoreApi.Services.Implementations;
 using BookstoreApi.Services.Interfaces;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
-var builder = WebApplication.CreateBuilder(args);
-
-builder.Services.AddCors(options =>
+namespace BookstoreApi
 {
-    options.AddPolicy("AllowAll", builder =>
+    public partial class Program
     {
-        builder.AllowAnyOrigin()
-               .AllowAnyMethod()
-               .AllowAnyHeader();
-    });
-});
+        public static void Main(string[] args)
+        {
+            var builder = WebApplication.CreateBuilder(args);
 
-// Add controllers service (important for API controllers)
-builder.Services.AddControllers();
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAll", builder =>
+                {
+                    builder.AllowAnyOrigin()
+                           .AllowAnyMethod()
+                           .AllowAnyHeader();
+                });
+            });
 
-// Add Swagger services
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+            builder.Services.AddControllers();
+            builder.Services.AddEndpointsApiExplorer();
+            builder.Services.AddSwaggerGen();
+            builder.Services.AddAutoMapper(typeof(Program), typeof(AutoMapperProfile));
+            builder.Services.AddScoped<IBookRepository, BookRepository>();
+            builder.Services.AddScoped<IBookService, BookService>();
 
-// Add AutoMapper services
-builder.Services.AddAutoMapper(typeof(Program), typeof(AutoMapperProfile));
+            var xmlPath = builder.Configuration.GetValue<string>("XmlDataPath");
 
-// Register repositories and services for dependency injection
-builder.Services.AddScoped<IBookRepository, BookRepository>();
-builder.Services.AddScoped<IBookService, BookService>();
+            var app = builder.Build();
 
+            app.UseSwagger();
+            app.UseSwaggerUI();
 
-// Load XML file path from configuration
-var xmlPath = builder.Configuration.GetValue<string>("XmlDataPath");
+            app.MapControllers();
 
-// Build the WebApplication
-var app = builder.Build();
+            app.UseMiddleware<BookstoreApi.Middleware.ErrorHandlingMiddleware>();
 
-app.UseSwagger();
-app.UseSwaggerUI();
+            app.UseCors("AllowAll");
 
-// Map controller endpoints
-app.MapControllers();
-
-app.UseMiddleware<BookstoreApi.Middleware.ErrorHandlingMiddleware>();
-
-app.UseCors("AllowAll");
-
-app.Run();
+            app.Run();
+        }
+    }
+}
