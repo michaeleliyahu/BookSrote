@@ -41,7 +41,7 @@ It also provides the ability to generate an HTML report listing all books.
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/michaeleliyahu/BookSrote.git
+git clone https://github.com/michaeleliyahu/BookStore.git
 cd BookStore
 ```
 
