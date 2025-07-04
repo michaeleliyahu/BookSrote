@@ -49,7 +49,7 @@ cd BookstoreApi
 
 ```bash
 {
-  "XmlDataPath": "Data/bookstore.xml"
+  "XmlDataPath": "BookstoreAp/Data/bookstore.xml"
 }
 ```
 
